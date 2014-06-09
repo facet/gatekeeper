@@ -4,19 +4,20 @@ var UsersAPI = require('ecapi.users')
   // , ResponseHandler = require('response-handler');
 
 var GateKeeper = function( options ){
+	console.log('instantiating gatekeeper');
 	this.options = options;
 	this.registerEvents();
-}
+};
 
 // inherit the prototype methods from EventEmitter
 util.inherits(GateKeeper, EventEmitter);
 
+
 GateKeeper.prototype.registerEvents = function() {
 	// var _this = this;
 
-	/*
-	* On data from user module, trigger response
-	*/
+	
+	// on data from user module, trigger response
 	this.on('User:data', function( req, res, next, data ) {
 		if( data.hasOwnProperty('id') ) {
 			req.user = data;
@@ -29,11 +30,15 @@ GateKeeper.prototype.registerEvents = function() {
 		}
 
 	});
-}
+};
 
-GateKeeper.prototype.auth = function(req, res, next, apikey) {
-	
-	this.emit('User:find', req, res, next, {api_key: apikey});
+GateKeeper.prototype.auth = function(req, res, next) {
+
+	console.log("Emitting user:find event");
+	// var _this = this;
+
+	var apikey = 'abc123';
+	_this.emit('User:find', req, res, next, {api_key: apikey});
 
 	// var data = { 
 	// 	user: {
@@ -42,6 +47,6 @@ GateKeeper.prototype.auth = function(req, res, next, apikey) {
 	// 	} };
 
 	// this.emit('gatekeeper:auth:res', req, res, next, data)
-}
+};
 
 module.exports = exports = GateKeeper;
