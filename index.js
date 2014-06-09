@@ -38,7 +38,7 @@ GateKeeper.prototype.auth = function(req, res, next) {
 	// var _this = this;
 
 	var apikey = 'abc123';
-	_this.emit('User:find', req, res, next, {api_key: apikey});
+	this.emit('User:find', req, res, next, {api_key: apikey});
 
 	// var data = { 
 	// 	user: {
