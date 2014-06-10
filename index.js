@@ -6,11 +6,9 @@ var UsersAPI = require('ecapi.users')
 var GateKeeper = function( options ){
 	console.log('instantiating gatekeeper');
 	this.options = options;
+	this.intercom = options.intercom;
 	this.registerEvents();
 };
-
-// inherit the prototype methods from EventEmitter
-util.inherits(GateKeeper, EventEmitter);
 
 
 GateKeeper.prototype.registerEvents = function() {
@@ -18,7 +16,7 @@ GateKeeper.prototype.registerEvents = function() {
 
 	
 	// on data from user module, trigger response
-	this.on('User:data', function( req, res, next, data ) {
+	this.intercom.on('User:data', function( req, res, next, data ) {
 		if( data.hasOwnProperty('id') ) {
 			req.user = data;
 			next();
@@ -38,7 +36,7 @@ GateKeeper.prototype.auth = function(req, res, next) {
 	// var _this = this;
 
 	var apikey = 'abc123';
-	this.emit('User:find', req, res, next, {api_key: apikey});
+	this.intercom.emit('User:find', req, res, next, {api_key: apikey});
 
 	// var data = { 
 	// 	user: {
