@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ecapi.users": "git+ssh://git@git.assembla.com:ecapi.users.git"
+    "ecapi.users": "git+ssh://git@git.assembla.com:ecapi.users.git",
+    "bcrypt": "^0.7.8"
   }
 }
