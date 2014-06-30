@@ -1,19 +1,18 @@
 {
-  "name": "ecapi.gatekeeper",
+  "name": "facet-gatekeeper",
   "version": "0.0.1",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git@git.assembla.com:ecapi.gatekeeper.git"
+    "url": "https://github.com/facet/gatekeeper.git"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "ecapi.users": "git+ssh://git@git.assembla.com:ecapi.users.git",
     "bcrypt": "^0.7.8"
   }
 }
