@@ -3,11 +3,13 @@ var chai = require('chai'),
   nodeAssert = require('assert'),
   should = chai.should,
   expect = chai.expect,
-  spies = require('chai-spies'),
+  sinon = require('sinon'),
+  sinonChai = require('sinon-chai'),
   Intercom = require('facet-intercom'),
   auth = require('../lib/api/Auth');
 
-chai.use(spies);
+chai.should();
+chai.use(sinonChai);
 
 var appOptions = {
   intercom: new Intercom
@@ -20,7 +22,7 @@ describe('AuthAPI', function() {
 
     // check that event is emitted when expected query format is received
     it('should emit a facet:user:findone event', function(){
-      var spy = chai.spy(function(){
+      var spy = sinon.spy(function(){
         nodeAssert(true, 'event fired successfully');
       }.bind(this));
       
@@ -35,7 +37,7 @@ describe('AuthAPI', function() {
 
     // check that response error event is emitted when no query specified
     it('should emit a facet:response:error event', function(){
-      var spy = chai.spy(function(){
+      var spy = sinon.spy(function(){
         nodeAssert(true, 'event fired successfully');
       }.bind(this));
       
