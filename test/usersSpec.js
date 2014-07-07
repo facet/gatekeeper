@@ -81,9 +81,8 @@ describe('UsersAPI', function() {
     // method 3 - returning a promise
     it('should return a promise if no event listener exists and no success callback was provided', function(){
       var p = new Promise;
-      // console.log('count: ', usersAPI.intercom.listenerCount('facet:response:user:data'));
       var result = usersAPI._doResponse('facet:response:user:data', p);
-      
+
       assert.equal(p, result, 'promise was successfully returned');
     });
 
