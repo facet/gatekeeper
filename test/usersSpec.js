@@ -161,4 +161,32 @@ describe('UsersAPI', function() {
   });
 
 
+  describe('#update', function(done) {
+    it('should call update on user model if correctly formatted query is passed in', function() {
+      var stubUpdate = sandbox.stub(usersAPI.User, 'update', function() {
+        return {exec: function(){
+          return new Promise;
+        }};
+      });
+
+      var query = {
+        conditions: {_id: '53b07c1c8e4850ea6ebf22f4'},
+        updates: {firstname: 'Lorne', lastname: 'Malvo'}
+      };
+      usersAPI.update(query);
+      expect(stubUpdate).to.have.been.calledWith({_id: '53b07c1c8e4850ea6ebf22f4'}, 
+        {firstname: 'Lorne', lastname: 'Malvo'}, {});
+    });
+  });
+
+  describe('#update', function(done) {
+    // TODO: write function to check return value in case 
+    // query does not contain conditions key
+  });
+
+  describe('#update', function(done) {
+    // TODO: write function to check return value in case 
+    // query does not contain updates key
+  });
+
 });
