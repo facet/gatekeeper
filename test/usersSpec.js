@@ -85,6 +85,32 @@ describe('UsersAPI', function() {
 
       assert.equal(p, result, 'promise was successfully returned');
     });
+  });
 
+
+  describe('#find', function(done) {
+    it('should call findOne if a user id was passed', function() {
+      var stub = sinon.stub(usersAPI.User, 'findOne', function() {
+        return {exec: function(){
+          return new Promise;
+        }};
+      });
+
+      usersAPI.find({id: '53b07c1c8e4850ea6ebf22f4'}, function(data){}, function(err){});
+      expect(stub).to.have.been.calledWith({_id: '53b07c1c8e4850ea6ebf22f4'}, '', {});
+    });
+  });
+
+  describe('#find', function(done) {
+    it('should call find if no id was specified', function() {
+      var stub = sinon.stub(usersAPI.User, 'find', function() {
+        return {exec: function(){
+          return new Promise;
+        }};
+      });
+
+      usersAPI.find({conditions: {name: 'The Dude'}}, function(data){}, function(err){});
+      expect(stub).to.have.been.calledWith({name: 'The Dude'}, '', {});
+    });
   });
 });
