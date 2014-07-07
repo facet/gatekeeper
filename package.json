@@ -37,6 +37,7 @@
     "superagent": "^0.18.0",
     "mongoose": "^3.8.12",
     "sinon-chai": "^2.5.0",
-    "sinon": "^1.10.2"
+    "sinon": "^1.10.2",
+    "mockgoose": "^1.10.0"
   }
 }

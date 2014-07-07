@@ -6,6 +6,7 @@ var chai = require('chai'),
   sinonChai = require('sinon-chai'),
   // chaiAsPromised = require("chai-as-promised"),
   mongoose = require('mongoose'),
+  mockgoose = require('Mockgoose'),
   Promise = mongoose.Promise,
   Intercom = require('facet-intercom'),
   Users = require('../lib/api/Users');
@@ -14,6 +15,7 @@ chai.should();
 chai.use(sinonChai);
 // chai.use(chaiAsPromised);
 
+mockgoose(mongoose);
 mongoose.connect( 'mongodb://localhost:27017/ecapi', { server: { socketOptions: { keepAlive: 1 } } });
 mongoose.connection.on( 'error', console.error.bind( console, 'connection error:' ) );
 
