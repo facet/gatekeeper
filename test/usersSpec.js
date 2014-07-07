@@ -4,6 +4,7 @@ var chai = require('chai'),
   expect = chai.expect,
   sinon = require('sinon'),
   sinonChai = require('sinon-chai'),
+  // chaiAsPromised = require("chai-as-promised"),
   mongoose = require('mongoose'),
   Promise = mongoose.Promise,
   Intercom = require('facet-intercom'),
@@ -11,6 +12,7 @@ var chai = require('chai'),
 
 chai.should();
 chai.use(sinonChai);
+// chai.use(chaiAsPromised);
 
 mongoose.connect( 'mongodb://localhost:27017/ecapi', { server: { socketOptions: { keepAlive: 1 } } });
 mongoose.connection.on( 'error', console.error.bind( console, 'connection error:' ) );
@@ -19,6 +21,16 @@ var appOptions = { intercom: new Intercom, db: mongoose };
 var usersAPI = new Users(appOptions);
 
 describe('UsersAPI', function() {
+
+  var sandbox;
+
+  beforeEach(function () {
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(function () {
+    sandbox.restore();
+  });
 
   // make sure that listners have been registered
   describe('#registerEvents()', function(done) {
@@ -37,12 +49,12 @@ describe('UsersAPI', function() {
     // method 1 - callbacks
     it('should invoke success callback if one is provided', function(done){
       var data = {'id': 'somehash'};
-      var successSpy = sinon.spy(function(data){
-        successSpy.should.have.been.calledOnce;
+      sandbox.successSpy = sinon.spy(function(data){
+        sandbox.successSpy.should.have.been.calledOnce;
         done();  
       });
       var p = new Promise;
-      usersAPI._doResponse('facet:response:user:data', p, successSpy, function(){});
+      usersAPI._doResponse('facet:response:user:data', p, sandbox.successSpy, function(){});
       p.fulfill(data);
     });
 
@@ -90,18 +102,16 @@ describe('UsersAPI', function() {
 
   describe('#find', function(done) {
     it('should call findOne if a user id was passed', function() {
-      var stub = sinon.stub(usersAPI.User, 'findOne', function() {
+      var stubFindOne = sandbox.stub(usersAPI.User, 'findOne', function() {
         return {exec: function(){
           return new Promise;
         }};
       });
 
       usersAPI.find({id: '53b07c1c8e4850ea6ebf22f4'}, function(data){}, function(err){});
-      expect(stub).to.have.been.calledWith({_id: '53b07c1c8e4850ea6ebf22f4'}, '', {});
+      expect(stubFindOne).to.have.been.calledWith({_id: '53b07c1c8e4850ea6ebf22f4'}, '', {});
     });
-  });
 
-  describe('#find', function(done) {
     it('should call find if no id was specified', function() {
       var stub = sinon.stub(usersAPI.User, 'find', function() {
         return {exec: function(){
@@ -112,5 +122,43 @@ describe('UsersAPI', function() {
       usersAPI.find({conditions: {name: 'The Dude'}}, function(data){}, function(err){});
       expect(stub).to.have.been.calledWith({name: 'The Dude'}, '', {});
     });
+
+    it('should return a promise if no success/error callbacks are passed in', function() {
+      var successSpy = sinon.spy(function(data){
+        successSpy.should.have.been.calledOnce;
+        done();
+      });
+
+      var errorSpy = sinon.spy(function(err){
+        errorSpy.should.have.been.calledOnce;
+        done();
+      });
+
+      var result = usersAPI.find( {_id: '53b07c1c8e4850ea6ebf22f4'} );
+      result.then(successSpy, errorSpy);
+    });
   });
+
+  describe('#find', function(done) {
+    // TODO: write function to check return value in case of invalid input
+  });
+
+  describe('#findOne', function(done) {
+    it('should call findOne on user model if anything was passed into query param', function() {
+      var stubFindOne = sandbox.stub(usersAPI.User, 'findOne', function() {
+        return {exec: function(){
+          return new Promise;
+        }};
+      });
+
+      usersAPI.find({id: '53b07c1c8e4850ea6ebf22f4'}, function(data){}, function(err){});
+      expect(stubFindOne).to.have.been.calledOnce;
+    });
+  });
+
+  describe('#findOne', function(done) {
+    // TODO: write function to check return value in case of invalid input
+  });
+
+
 });
