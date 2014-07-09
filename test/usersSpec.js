@@ -16,7 +16,7 @@ chai.use(sinonChai);
 // chai.use(chaiAsPromised);
 
 mockgoose(mongoose);
-mongoose.connect( 'mongodb://localhost:27017/ecapi', { server: { socketOptions: { keepAlive: 1 } } });
+mongoose.connect( 'mongodb://localhost:27017/facet', { server: { socketOptions: { keepAlive: 1 } } });
 mongoose.connection.on( 'error', console.error.bind( console, 'connection error:' ) );
 
 var appOptions = { intercom: new Intercom, db: mongoose };
