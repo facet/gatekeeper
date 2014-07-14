@@ -29,7 +29,8 @@
     "bcrypt": "^0.7.8",
     "underscore": "^1.6.0",
     "promise": "^5.0.0",
-    "facet-intercom": "https://github.com/facet/intercom.git"
+    "facet-intercom": "https://github.com/facet/intercom.git",
+    "mongoose-tree": "^0.2.2"
   },
   "devDependencies": {
     "mocha": "^1.20.1",
