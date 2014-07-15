@@ -30,7 +30,8 @@
     "underscore": "^1.6.0",
     "promise": "^5.0.0",
     "facet-intercom": "https://github.com/facet/intercom.git",
-    "mongoose-tree": "^0.2.2"
+    "mongoose-tree": "^0.2.2",
+    "async": "^0.9.0"
   },
   "devDependencies": {
     "mocha": "^1.20.1",
