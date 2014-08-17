@@ -2,13 +2,16 @@ var chai = require('chai'),
   expect = chai.expect,
   sinon = require('sinon'),
   sinonChai = require('sinon-chai'),
+  should = chai.should,
   Intercom = require('facet-intercom'),
   auth = require('../lib/api/Auth'),
   users = require('../lib/api/Users'),
+  groups = require('../lib/api/Groups'),
   mongoose = require('mongoose'),
   mockgoose = require('Mockgoose');
 
 chai.use(sinonChai);
+chai.should();
 mockgoose(mongoose);
 mongoose.connect( 'mongodb://localhost:27017/facet', { server: { socketOptions: { keepAlive: 1 } } });
 mongoose.connection.on( 'error', console.error.bind( console, 'connection error:' ) );
@@ -21,6 +24,7 @@ var appOptions = {
 
 var authAPI = new auth(appOptions);
 var usersAPI = new users(appOptions);
+var groupsAPI = new groups(appOptions);
 
 
 describe('AuthAPI', function() {
@@ -163,4 +167,144 @@ describe('AuthAPI', function() {
     });
   });
 
+
+  describe('#loginAccount', function(done) {
+    var query = {
+      conditions: {},
+      options: {
+        lean: false
+      },
+      fields: '+password'
+    };
+
+    beforeEach(function() {
+      query.conditions = {};
+    });
+
+    // make sure username condition is passed to loginAccount()
+    it('should emit a facet:user:findone event with a username condition', function(done) {
+      sandbox.findoneSpy = sinon.spy(function(data){
+        query.conditions.username = 'coolguy';
+        expect(data).to.deep.equal(query);
+        authAPI.intercom.removeListener('facet:user:findone', sandbox.findoneSpy);
+        done();
+      });
+
+      authAPI.intercom.on('facet:user:findone', sandbox.findoneSpy);
+      authAPI.loginAccount({username: 'coolguy', password: 'abc123'});
+    });
+
+    // make sure email condition is passed to loginAccount()
+    it('should emit a facet:user:findone event with an email condition', function(done) {
+      sandbox.findoneSpy = sinon.spy(function(data){
+        query.conditions.email = 'cool@guy.com';
+        expect(data).to.deep.equal(query);
+        authAPI.intercom.removeListener('facet:user:findone', sandbox.findoneSpy);
+        done();
+      });
+      authAPI.intercom.on('facet:user:findone', sandbox.findoneSpy);
+      authAPI.loginAccount({email: 'cool@guy.com', password: 'abc123'});
+    });
+
+
+    // make sure a user object is returned from loginAccount()
+    it('should return a promise that fulfills a user key', function(done) {
+      var p = authAPI.loginAccount({username: 'apiadmin', password: 'change_me'});
+      
+      p.then(function(data) {
+        expect(data.username).to.equal('apiadmin');
+        done();
+        },
+        function(err) {
+          console.log('err: ', err);
+        }).end();
+    });
+  });
+
+
+
+  describe('#apiAuthJwt', function(done) {
+    var query = {
+      conditions: {},
+      options: {
+        lean: false
+      },
+      populate: 'groups'
+    };
+
+    var nodeStack = {
+      req: {
+        headers: {}
+      },
+      res: {},
+      next: null
+    };
+
+    beforeEach(function() {
+      query.conditions = {};
+    });
+
+    it('should return a rejected promise if no token is present', function(done) {
+      var result = authAPI.apiAuthJwt({}, nodeStack);
+      result.then(function(data) {
+      },
+      function(err) {
+        expect(err.message).to.exist;
+        done();
+      });
+    });
+
+    // should emit facet:auth:api:done
+    it('should emit facet:auth:api:done on successful token', function(done) {
+      sandbox.apiAuthDone = sinon.spy(function(data){
+        authAPI.intercom.removeListener('facet:auth:api:done', sandbox.apiAuthDone);
+        done();
+      });
+      authAPI.intercom.on('facet:auth:api:done', sandbox.apiAuthDone);
+
+      // get token
+      var p = authAPI.loginJwt({username: 'apiadmin', password: 'change_me'});
+      
+      p.then(function(data) {
+        nodeStack.req.headers['x-access-token'] = data.token;
+        authAPI.apiAuthJwt({}, nodeStack)
+
+        },
+        function(err) {
+          console.log('err: ', err);
+        }).end();
+    });
+  });
+
+
+  describe('#apiAuthBasic()', function(done) {
+
+    // check that event is emitted when expected query format is received
+    it('should emit a facet:user:findone event', function(done){
+      sandbox.spy = sinon.spy(function(){
+        sandbox.spy.should.have.been.calledOnce;
+        authAPI.intercom.removeListener('facet:user:findone', sandbox.spy);
+        done();
+      });
+      
+      authAPI.intercom.on('facet:user:findone', sandbox.spy);
+
+      var query = {
+        conditions: {api_key: 'change_me_too'}
+      };
+      authAPI.apiAuthBasic(query);
+    });
+
+    // check that response error event is emitted when no query specified
+    it('should emit a facet:response:error event', function(done){
+      sandbox.spy = sinon.spy(function(){
+        sandbox.spy.should.have.been.calledOnce;
+        authAPI.intercom.removeListener('facet:response:error', sandbox.spy);
+        done();
+      });
+      
+      authAPI.intercom.on('facet:response:error', sandbox.spy);
+      authAPI.apiAuthBasic();
+    });
+  });
 });
