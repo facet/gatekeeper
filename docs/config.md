@@ -11,11 +11,11 @@ An instance of mongoose that has been configured to use your desired connection 
 An instance of `facet-intercom`. Intercom is used as an event aggregator as a means of decoupled inter-module communication. All facet modules emit a some number of requests per invokation. See the list of events emitted by this module.
 
 
-#### container_id - optional
+#### tenant_id - optional
 
 type: string - should be a valid string representation of a mongo ObjectId.
 
-In multi tenant applications you will want to silo resources. Facet modules use a shared schema method so the container_id (and app_id) fields are provided. This allows for each tenant to run multiple apps and share data among them.
+In multi tenant applications you will want to silo resources. Facet modules use a shared schema method so the tenant_id (and app_id) fields are provided. This allows for each tenant to run multiple apps and share data among them.
 
 #### app_id - optional
 
