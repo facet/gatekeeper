@@ -1,8 +1,6 @@
 # gatekeeper
 
-Gatekeeper is a Node.js and MongoDB authentication and role based access control system. Key features are:
-
-**This module is currently in beta. See the TODO section for details on missing functionality**
+Node.js and MongoDB authentication and role based access control system. Key features are:
 
 * framework agnostic but exposes middleware functions that integrate easily with existing frameworks (such as ExpressJS, Koa and Flatiron). **alpha note: only express style middleware is currently supported**
 * provides API authentication via basic auth or JSON web tokens (jwt)
@@ -19,6 +17,7 @@ There are two main ways of using this module:
 1. In auto route binding mode, resulting in complete CRUD JSON web service out of the box.
 2. As a standalone library in custom piecemeal integrations (no auto route binding).
 
+**This module is currently in beta. See the TODO section for details on missing functionality**
 
 ## Examples
 
