@@ -38,17 +38,13 @@ coming soon...
 The following steps will get gatekeeper running locally:
 
 1. [Install mongodb](http://docs.mongodb.org/manual/installation/) and start the service. 
-2. run `npm install facet-gatekeeper` in your project's root directory
+2. run `npm install facet-gatekeeper --save` in your project's root directory
 
-You'll likely want to secure some or all of your API. To do so first create an api user through the mongo shell. You can typically do so with the following two commands:
-
-`use <your database name>`
-
-`db.users.insert({ "username" : "apiadmin", "password" : "change_me", "api_key" : "change_me_too", "permissions" : [ { "action" : "*", "level" : 1 } ] })`
-
-You'll obviously want to change `<your database name>`, `change_me` and `change_me_too`. The api_key field is only required if you want to use basic auth. See [configuration section](#configuration) for setting the auth method.
+You'll likely want to secure some or all of your API. To setup your first API user  run `node install` and answer the prompts.
 
 Set `GatekeeperAPI.apiAuthMiddleware()` to be used by your app/router. If you're creating an express app, you can do so by adding `app.use(GatekeeperAPI.apiAuthMiddleware());`. Be sure to include that middleware call before declaring/binding any routes you wish to restrict access to.
+
+If you don't want to require api authentication for usage you should instead use `GatekeeperAPI.facetInit()` to initialize the module with the request lifecycle objects. The facetInit() function is available to all facet modules and only needs to be used once, regardless of the number of facet modules in use. 
 
 
 ## Configuration
