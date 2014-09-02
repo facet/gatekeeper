@@ -1,5 +1,3 @@
-#!/bin/env node
-
 var prompt = require('prompt'),
     Users = require('./lib/api/Users'),
     mongoose = require('mongoose'),
