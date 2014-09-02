@@ -1,7 +1,6 @@
-**This module is currently in alpha and not suitable for production use. See the TODO section for details on missing functionality**
+**This module is currently in beta. See the TODO section for details on missing functionality**
 
 # gatekeeper
-
 
 Gatekeeper is a Node.js and MongoDB authentication and role based access control system. Key features are:
 
@@ -70,6 +69,8 @@ coming soon
 TODO
 ----------------
 * bug fixes
+* custom validation for multitenancy
+* set up related model routes (ie /users/<id>/groups)
 * write middleware for koa and flatiron
 * implement password retrieval
 * implement oauth
