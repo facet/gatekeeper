@@ -90,14 +90,16 @@ function dbCreate(userObj){
 function dbPrompt(input, callback){
   prompt.start();
   prompt.get(input, function (err, result) {
-    mongoose.connect(result.uriString,function(err) {
-      if (err) {
-        console.log('There was an error connecting to mongo:\r\n' + err);
-        return dbPrompt(input,callback);
-      }
-      callback(result.uriString);
-      return;
-    });
+    if( result !== undefined ) {
+      mongoose.connect(result.uriString,function(err) {
+        if (err) {
+          console.log('There was an error connecting to mongo:\r\n' + err);
+          return dbPrompt(input,callback);
+        }
+        callback(result.uriString);
+        return;
+      });
+    }
   });
 }
 
