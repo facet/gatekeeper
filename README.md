@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://raw.github.com/facet/gatekeeper/master/assets/facet_sm.png" />
+  <img src="https://raw.github.com/facet/gatekeeper/master/assets/facet.png" />
 </p>
 
 # gatekeeper
