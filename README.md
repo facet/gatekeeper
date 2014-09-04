@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="https://raw.github.com/facet/gatekeeper/master/assets/facet.png"/>
+</p>
+
 # gatekeeper
 
 Node.js and MongoDB authentication and role based access control system. 
