@@ -1,7 +1,7 @@
 {
   "name": "facet-gatekeeper",
   "version": "0.1.1",
-  "description": "Framework agnostic Node.js and MongoDB authentication and role based access control",
+  "description": "Framework agnostic Node.js and MongoDB api/user authentication and role based access control",
   "main": "index.js",
   "scripts": {
     "test": "mocha test"
