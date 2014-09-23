@@ -27,6 +27,8 @@ There are two main ways of using this module:
 
 ## Examples
 
+You can check out sample apps [here](https://github.com/facet/gatekeeper/tree/master/sample_apps).
+
 ### Auto route binding
 
 coming soon...
