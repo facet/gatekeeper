@@ -98,49 +98,65 @@ describe('AuthAPI', function() {
     };
 
     beforeEach(function() {
-      query.conditions = {};
+      query = {
+        conditions: {},
+        options: {
+          lean: false
+        },
+        fields: '+password'
+      };
     });
 
     // make sure username condition is passed to loginJwt()
-    it('should emit a facet:user:findone event with a username condition', function(done) {
+    it('should emit a facet:user:findone:auth event with a $and-ed username condition', function(done) {
       sandbox.findoneSpy = sinon.spy(function(data){
-        query.conditions.username = 'coolguy';
+        query.conditions.$and = [{
+          username: 'coolguy'
+        }];
+
+        // query.conditions.username = 'coolguy';
+
         expect(data).to.deep.equal(query);
-        authAPI.intercom.removeListener('facet:user:findone', sandbox.findoneSpy);
+        authAPI.intercom.removeListener('facet:user:findone:auth', sandbox.findoneSpy);
         done();
       });
 
-      authAPI.intercom.on('facet:user:findone', sandbox.findoneSpy);
+      authAPI.intercom.on('facet:user:findone:auth', sandbox.findoneSpy);
       authAPI.loginJwt({username: 'coolguy', password: 'abc123'});
     });
 
     // make sure email condition is passed to loginJwt()
-    it('should emit a facet:user:findone event with an email condition', function(done) {
+    it('should emit a facet:user:findone:auth event with an $and-ed email condition', function(done) {
       sandbox.findoneSpy = sinon.spy(function(data){
-        query.conditions.email = 'cool@guy.com';
+        query.conditions.$and = [{
+          email: 'cool@guy.com'
+        }];
+
+        // query.conditions.email = 'cool@guy.com';
         expect(data).to.deep.equal(query);
-        authAPI.intercom.removeListener('facet:user:findone', sandbox.findoneSpy);
+        authAPI.intercom.removeListener('facet:user:findone:auth', sandbox.findoneSpy);
         done();
       });
-      authAPI.intercom.on('facet:user:findone', sandbox.findoneSpy);
+      authAPI.intercom.on('facet:user:findone:auth', sandbox.findoneSpy);
       authAPI.loginJwt({email: 'cool@guy.com', password: 'abc123'});
     });
 
     // make sure a user object is returned from loginJwt()
-    it('should return a promise that fulfills a token, expires, and user key', function(done) {
+    it('should return a promise that fulfills a user key', function(done) {
       var p = authAPI.loginJwt({username: 'apiadmin', password: 'change_me'});
       
       p.then(function(data) {
         expect(data.user.username).to.equal('apiadmin');
         done();
-        },
-        function(err) {
-          console.log('err: ', err);
-        }).end();
+      }, function(err) {
+        console.log('err: ', err);
+      })
+      .end();
+
     });
 
     // make sure a expires int is returned from loginJwt()
-    it('should return a promise that fulfills a token, expires, and user key', function(done) {
+    it('should return a promise that fulfills a expires key', function(done) {
       var p = authAPI.loginJwt({username: 'apiadmin', password: 'change_me'});
       
       p.then(function(data) {
@@ -154,7 +170,7 @@ describe('AuthAPI', function() {
 
 
     // make sure a token string is returned from loginJwt()
-    it('should return a promise that fulfills a token, expires, and user key', function(done) {
+    it('should return a promise that fulfills a token key', function(done) {
       var p = authAPI.loginJwt({username: 'apiadmin', password: 'change_me'});
       
       p.then(function(data) {
@@ -184,25 +200,36 @@ describe('AuthAPI', function() {
     // make sure username condition is passed to loginAccount()
     it('should emit a facet:user:findone event with a username condition', function(done) {
       sandbox.findoneSpy = sinon.spy(function(data){
-        query.conditions.username = 'coolguy';
+        
+        // query.conditions.username = 'coolguy';
+        
+        query.conditions.$and = [{
+          username: 'coolguy'
+        }];
+
         expect(data).to.deep.equal(query);
-        authAPI.intercom.removeListener('facet:user:findone', sandbox.findoneSpy);
+        authAPI.intercom.removeListener('facet:user:findone:auth', sandbox.findoneSpy);
         done();
       });
 
-      authAPI.intercom.on('facet:user:findone', sandbox.findoneSpy);
+      authAPI.intercom.on('facet:user:findone:auth', sandbox.findoneSpy);
       authAPI.loginAccount({username: 'coolguy', password: 'abc123'});
     });
 
     // make sure email condition is passed to loginAccount()
     it('should emit a facet:user:findone event with an email condition', function(done) {
       sandbox.findoneSpy = sinon.spy(function(data){
-        query.conditions.email = 'cool@guy.com';
+        // query.conditions.email = 'cool@guy.com';
+
+        query.conditions.$and = [{
+          email: 'cool@guy.com'
+        }];
+
         expect(data).to.deep.equal(query);
-        authAPI.intercom.removeListener('facet:user:findone', sandbox.findoneSpy);
+        authAPI.intercom.removeListener('facet:user:findone:auth', sandbox.findoneSpy);
         done();
       });
-      authAPI.intercom.on('facet:user:findone', sandbox.findoneSpy);
+      authAPI.intercom.on('facet:user:findone:auth', sandbox.findoneSpy);
       authAPI.loginAccount({email: 'cool@guy.com', password: 'abc123'});
     });
 
@@ -214,11 +241,12 @@ describe('AuthAPI', function() {
       p.then(function(data) {
         expect(data.username).to.equal('apiadmin');
         done();
-        },
-        function(err) {
-          console.log('err: ', err);
-        }).end();
+      }, function(err) {
+        console.log('err: ', err);
+      })
+      .end();
     });
+
   });
 
 
@@ -280,14 +308,14 @@ describe('AuthAPI', function() {
   describe('#apiAuthBasic()', function(done) {
 
     // check that event is emitted when expected query format is received
-    it('should emit a facet:user:findone event', function(done){
+    it('should emit a facet:user:findone:auth event', function(done){
       sandbox.spy = sinon.spy(function(){
         sandbox.spy.should.have.been.calledOnce;
-        authAPI.intercom.removeListener('facet:user:findone', sandbox.spy);
+        authAPI.intercom.removeListener('facet:user:findone:auth', sandbox.spy);
         done();
       });
       
-      authAPI.intercom.on('facet:user:findone', sandbox.spy);
+      authAPI.intercom.on('facet:user:findone:auth', sandbox.spy);
 
       var query = {
         conditions: {api_key: 'change_me_too'}
