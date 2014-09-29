@@ -3,28 +3,14 @@ var chai = require('chai'),
   sinon = require('sinon'),
   sinonChai = require('sinon-chai'),
   should = chai.should,
-  Intercom = require('facet-intercom'),
-  auth = require('../lib/api/Auth'),
-  users = require('../lib/api/Users'),
-  groups = require('../lib/api/Groups'),
-  mongoose = require('mongoose'),
-  mockgoose = require('Mockgoose');
+  bootstrap = require('./inc/bootstrap'),
+  mongoose = bootstrap.mongoose,
+  authAPI = bootstrap.authApi,
+  usersAPI = bootstrap.usersApi,
+  groupsAPI = bootstrap.groupsApi;
 
 chai.use(sinonChai);
 chai.should();
-mockgoose(mongoose);
-mongoose.connect( 'mongodb://localhost:27017/facet', { server: { socketOptions: { keepAlive: 1 } } });
-mongoose.connection.on( 'error', console.error.bind( console, 'connection error:' ) );
-
-var appOptions = {
-  intercom: new Intercom,
-  db: mongoose,
-  apiSecret: 'SOME_SECRET_STRING'
-};
-
-var authAPI = new auth(appOptions);
-var usersAPI = new users(appOptions);
-var groupsAPI = new groups(appOptions);
 
 
 describe('AuthAPI', function() {
