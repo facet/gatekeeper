@@ -1,6 +1,6 @@
 var chai = require('chai'),
   assert = chai.assert,
-  should = chai.should,
+  should = chai.should(),
   expect = chai.expect,
   sinon = require('sinon'),
   sinonChai = require('sinon-chai'),
@@ -8,7 +8,7 @@ var chai = require('chai'),
   mongoose = bootstrap.mongoose,
   usersApi = bootstrap.usersApi;
 
-chai.should();
+// chai.should();
 chai.use(sinonChai);
 
 

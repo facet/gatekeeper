@@ -2,7 +2,7 @@ var chai = require('chai'),
   expect = chai.expect,
   sinon = require('sinon'),
   sinonChai = require('sinon-chai'),
-  should = chai.should,
+  should = chai.should(),
   bootstrap = require('./inc/bootstrap'),
   mongoose = bootstrap.mongoose,
   authAPI = bootstrap.authApi,
@@ -10,7 +10,7 @@ var chai = require('chai'),
   groupsAPI = bootstrap.groupsApi;
 
 chai.use(sinonChai);
-chai.should();
+// chai.should();
 
 
 describe('AuthAPI', function() {
@@ -25,7 +25,7 @@ describe('AuthAPI', function() {
       done();
     },
     function(err) {
-      console.log(err);
+      console.log('before err: ' + err);
     });
   });
 
